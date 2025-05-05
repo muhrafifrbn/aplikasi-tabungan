@@ -21,38 +21,307 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Uang Keluar"
+            android:text="Playstation"
             android:textSize="27sp"
             android:textStyle="bold"
             android:textAlignment="center"
             />
     </LinearLayout>
-
+    
+    
     <LinearLayout
+        android:id="@+id/linearDua"
         app:layout_constraintTop_toBottomOf="@id/linearSatu"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_width="150dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_width="400dp"
+        android:layout_height="59dp"
+        android:background="@drawable/backgroud_form"
+        android:orientation="horizontal"
+        android:layout_marginTop="20dp"
+        >
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:text="Target"
+                android:textAlignment="center"
+                android:textStyle="bold"
+                />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:text="Rp. 10.000.000"
+                android:textAlignment="center"
+                android:textStyle="bold"
+                />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:text="Terkumpul"
+                android:textAlignment="center"
+                android:textStyle="bold"
+                />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:text="Rp. 200.000"
+                android:textAlignment="center"
+                android:textStyle="bold"
+                />
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        app:layout_constraintTop_toBottomOf="@id/linearDua"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:background="@drawable/backgroud_form"
         android:orientation="vertical"
-        android:layout_height="wrap_content">
+        android:layout_width="382dp"
+        android:paddingVertical="25dp"
+        android:layout_marginTop="20dp"
+        android:layout_height="500dp">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Playstation"
-            />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Rp. 5.000.000"
-            />
+<!--        Uang Masuk 1-->
+        <LinearLayout
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_width="318dp"
+            android:orientation="horizontal"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/background_green"
+            android:layout_height="72dp">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Terkumpul Rp. 25"
-            />
+           <LinearLayout
+               android:layout_width="150dp"
+               android:orientation="vertical"
+               android:layout_gravity="center"
+               android:layout_height="wrap_content">
+               <TextView
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:text="Uang Masuk"
+                   android:textAlignment="center"
+                   android:textSize="16sp"
+                   android:textStyle="bold"
+                   android:textColor="@color/white"
+                   />
+               <TextView
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:text="Rp.50.000"
+                   android:textAlignment="center"
+                   android:textSize="27sp"
+                   android:textStyle="bold"
+                   android:textColor="@color/white"
+                   />
+           </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="150dp"
+                android:orientation="vertical"
+                android:layout_gravity="center"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="02/05/2025"
+                    android:textAlignment="textEnd"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/white"
+                    />
+            </LinearLayout>
+
+
+
+
+
+        </LinearLayout>
+
+<!--        Uang Masuk 2-->
+        <LinearLayout
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_width="318dp"
+            android:orientation="horizontal"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/background_green"
+            android:layout_height="72dp">
+
+            <LinearLayout
+                android:layout_width="150dp"
+                android:orientation="vertical"
+                android:layout_gravity="center"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Uang Masuk"
+                    android:textAlignment="center"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/white"
+                    />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Rp.200.000"
+                    android:textAlignment="center"
+                    android:textSize="27sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/white"
+                    />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="150dp"
+                android:orientation="vertical"
+                android:layout_gravity="center"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="05/05/2025"
+                    android:textAlignment="textEnd"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/white"
+                    />
+            </LinearLayout>
+
+        </LinearLayout>
+
+<!--        Uang Masuk 3-->
+        <LinearLayout
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_width="318dp"
+            android:orientation="horizontal"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/background_green"
+            android:layout_height="72dp">
+
+            <LinearLayout
+                android:layout_width="150dp"
+                android:orientation="vertical"
+                android:layout_gravity="center"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Uang Masuk"
+                    android:textAlignment="center"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/white"
+                    />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Rp.300.000"
+                    android:textAlignment="center"
+                    android:textSize="27sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/white"
+                    />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="150dp"
+                android:orientation="vertical"
+                android:layout_gravity="center"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="07/05/2025"
+                    android:textAlignment="textEnd"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/white"
+                    />
+            </LinearLayout>
+
+        </LinearLayout>
+
+<!--        Uang Masuk 4-->
+        <LinearLayout
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_width="318dp"
+            android:orientation="horizontal"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/background_red"
+            android:layout_height="72dp">
+
+            <LinearLayout
+                android:layout_width="150dp"
+                android:orientation="vertical"
+                android:layout_gravity="center"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Uang Keluar"
+                    android:textAlignment="center"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/white"
+                    />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Rp.100.000"
+                    android:textAlignment="center"
+                    android:textSize="27sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/white"
+                    />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="150dp"
+                android:orientation="vertical"
+                android:layout_gravity="center"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="09/05/2025"
+                    android:textAlignment="textEnd"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/white"
+                    />
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+
+
 
 
     </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

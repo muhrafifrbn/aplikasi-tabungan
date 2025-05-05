@@ -5,6 +5,54 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/purple"
     tools:context=".DetailTabunganActivity">
 
+    <LinearLayout
+        android:id="@+id/linearSatu"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_width="match_parent"
+        android:background="@drawable/background_top"
+        android:layout_height="120dp"
+        android:gravity="center_vertical"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Uang Keluar"
+            android:textSize="27sp"
+            android:textStyle="bold"
+            android:textAlignment="center"
+            />
+    </LinearLayout>
+
+    <LinearLayout
+        app:layout_constraintTop_toBottomOf="@id/linearSatu"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_width="150dp"
+        android:orientation="vertical"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Playstation"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Rp. 5.000.000"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Terkumpul Rp. 25"
+            />
+
+
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

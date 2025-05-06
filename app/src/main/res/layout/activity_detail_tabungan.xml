@@ -91,6 +91,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/linearTiga"
         app:layout_constraintTop_toBottomOf="@id/linearDua"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -375,6 +376,43 @@
 
 
 
+    </LinearLayout>
+
+    <LinearLayout
+        app:layout_constraintTop_toBottomOf="@id/linearTiga"
+        app:layout_constraintStart_toStartOf="parent"
+        android:orientation="vertical"
+        android:layout_width="382dp"
+        android:layout_marginTop="20dp"
+        android:layout_height="wrap_content">
+        
+        <androidx.appcompat.widget.AppCompatButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="+ Menabung"
+            android:background="@drawable/background_green"
+            android:textSize="15sp"
+            android:textColor="@color/white"
+            android:paddingVertical="5dp"
+            android:textStyle="bold"
+            android:paddingHorizontal="20dp"
+            android:layout_gravity="end"
+            android:layout_marginBottom="10dp"
+            />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="- Ambil Tabungan"
+            android:background="@drawable/background_red"
+            android:textSize="15sp"
+            android:textColor="@color/white"
+            android:paddingVertical="5dp"
+            android:textStyle="bold"
+            android:paddingHorizontal="20dp"
+            android:layout_gravity="end"
+            />
+        
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

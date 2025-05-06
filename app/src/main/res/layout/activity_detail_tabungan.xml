@@ -34,7 +34,7 @@
         app:layout_constraintTop_toBottomOf="@id/linearSatu"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_width="400dp"
+        android:layout_width="382dp"
         android:layout_height="59dp"
         android:background="@drawable/backgroud_form"
         android:orientation="horizontal"
@@ -91,6 +91,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/linearTiga"
         app:layout_constraintTop_toBottomOf="@id/linearDua"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -264,7 +265,7 @@
 
         </LinearLayout>
 
-<!--        Uang Masuk 4-->
+<!--        Uang Masuk 1-->
         <LinearLayout
             app:layout_constraintStart_toStartOf="parent"
             android:layout_width="318dp"
@@ -317,11 +318,101 @@
 
         </LinearLayout>
 
+<!--        Uang Keluar 2-->
+        <LinearLayout
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_width="318dp"
+            android:orientation="horizontal"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/background_red"
+            android:layout_height="72dp">
+
+            <LinearLayout
+                android:layout_width="150dp"
+                android:orientation="vertical"
+                android:layout_gravity="center"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Uang Keluar"
+                    android:textAlignment="center"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/white"
+                    />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Rp.50.000"
+                    android:textAlignment="center"
+                    android:textSize="27sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/white"
+                    />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="150dp"
+                android:orientation="vertical"
+                android:layout_gravity="center"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="12/05/2025"
+                    android:textAlignment="textEnd"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/white"
+                    />
+            </LinearLayout>
+
+        </LinearLayout>
 
 
 
 
 
+
+    </LinearLayout>
+
+    <LinearLayout
+        app:layout_constraintTop_toBottomOf="@id/linearTiga"
+        app:layout_constraintStart_toStartOf="parent"
+        android:orientation="vertical"
+        android:layout_width="382dp"
+        android:layout_marginTop="20dp"
+        android:layout_height="wrap_content">
+        
+        <androidx.appcompat.widget.AppCompatButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="+ Menabung"
+            android:background="@drawable/background_green"
+            android:textSize="15sp"
+            android:textColor="@color/white"
+            android:paddingVertical="5dp"
+            android:textStyle="bold"
+            android:paddingHorizontal="20dp"
+            android:layout_gravity="end"
+            android:layout_marginBottom="10dp"
+            />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="- Ambil Tabungan"
+            android:background="@drawable/background_red"
+            android:textSize="15sp"
+            android:textColor="@color/white"
+            android:paddingVertical="5dp"
+            android:textStyle="bold"
+            android:paddingHorizontal="20dp"
+            android:layout_gravity="end"
+            />
+        
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

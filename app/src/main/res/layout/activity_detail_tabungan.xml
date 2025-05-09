@@ -15,8 +15,36 @@
         android:layout_width="match_parent"
         android:background="@drawable/background_top"
         android:layout_height="120dp"
-        android:gravity="center_vertical"
         android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:paddingHorizontal="20dp"
+            android:paddingVertical="10dp"
+            android:gravity="center_vertical"
+            android:layout_height="wrap_content">
+            
+            <androidx.appcompat.widget.AppCompatButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:drawableLeft="@drawable/icons_back_dua"
+                />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:drawableLeft="@drawable/icons_trash_tiga" />
+
+        </LinearLayout>
+
 
         <TextView
             android:layout_width="match_parent"
@@ -135,6 +163,7 @@
                    android:textStyle="bold"
                    android:textColor="@color/white"
                    />
+
            </LinearLayout>
 
             <LinearLayout
@@ -151,6 +180,13 @@
                     android:textStyle="bold"
                     android:textColor="@color/white"
                     />
+                <androidx.appcompat.widget.AppCompatButton
+                    android:layout_width="40dp"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/background_green"
+                    android:layout_gravity="end"
+                    android:drawableLeft="@drawable/icons_trash_tiga" />
+
             </LinearLayout>
 
 
@@ -158,6 +194,7 @@
 
 
         </LinearLayout>
+
 
 <!--        Uang Masuk 2-->
         <LinearLayout
@@ -208,6 +245,13 @@
                     android:textStyle="bold"
                     android:textColor="@color/white"
                     />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:layout_width="40dp"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/background_green"
+                    android:layout_gravity="end"
+                    android:drawableLeft="@drawable/icons_trash_tiga" />
             </LinearLayout>
 
         </LinearLayout>
@@ -261,11 +305,17 @@
                     android:textStyle="bold"
                     android:textColor="@color/white"
                     />
+                <androidx.appcompat.widget.AppCompatButton
+                    android:layout_width="40dp"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/background_green"
+                    android:layout_gravity="end"
+                    android:drawableLeft="@drawable/icons_trash_tiga" />
             </LinearLayout>
 
         </LinearLayout>
 
-<!--        Uang Masuk 1-->
+<!--        Uang Masuk 4-->
         <LinearLayout
             app:layout_constraintStart_toStartOf="parent"
             android:layout_width="318dp"
@@ -314,11 +364,17 @@
                     android:textStyle="bold"
                     android:textColor="@color/white"
                     />
+                <androidx.appcompat.widget.AppCompatButton
+                    android:layout_width="40dp"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/background_red"
+                    android:layout_gravity="end"
+                    android:drawableLeft="@drawable/icons_trash_tiga" />
             </LinearLayout>
 
         </LinearLayout>
 
-<!--        Uang Keluar 2-->
+<!--        Uang Keluar 5-->
         <LinearLayout
             app:layout_constraintStart_toStartOf="parent"
             android:layout_width="318dp"
@@ -367,13 +423,15 @@
                     android:textStyle="bold"
                     android:textColor="@color/white"
                     />
+                <androidx.appcompat.widget.AppCompatButton
+                    android:layout_width="40dp"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/background_red"
+                    android:layout_gravity="end"
+                    android:drawableLeft="@drawable/icons_trash_tiga" />
             </LinearLayout>
 
         </LinearLayout>
-
-
-
-
 
 
     </LinearLayout>

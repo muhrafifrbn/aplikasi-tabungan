@@ -22,7 +22,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="60dp" />
 
-    <!-- Username -->
+    <!-- Email -->
     <TextView
         android:id="@+id/lblEmail"
         android:layout_width="wrap_content"
@@ -48,6 +48,7 @@
         android:textColor="#000000"
         android:textSize="16sp"
         android:hint="Masukkan Email"
+        android:inputType="textEmailAddress"
         app:layout_constraintTop_toBottomOf="@id/lblEmail"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
@@ -97,7 +98,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Link Sign In -->
+    <!-- Link Sign Up -->
     <TextView
         android:id="@+id/txtNoAccount"
         android:layout_width="wrap_content"
@@ -111,17 +112,28 @@
         app:layout_constraintEnd_toEndOf="parent" />
 
     <TextView
-        android:id="@+id/txtSignInHere"
+        android:id="@+id/txtSignUpHere"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Sign up here"
         android:textColor="#0000FF"
         android:textSize="14sp"
         android:textStyle="bold"
-        android:autoLink="all"
         app:layout_constraintTop_toBottomOf="@id/txtNoAccount"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
+    <!-- ProgressBar yang ditambahkan -->
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        tools:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

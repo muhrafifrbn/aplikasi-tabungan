@@ -53,7 +53,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Username -->
+    <!-- NIK -->
     <TextView
         android:id="@+id/labelNik"
         android:layout_width="wrap_content"
@@ -78,11 +78,14 @@
         android:padding="10dp"
         android:textColor="#000000"
         android:textSize="16sp"
-        android:hint="Masukkan Username"
+        android:hint="Masukkan NIK"
+        android:inputType="number"
+        android:maxLength="16"
         app:layout_constraintTop_toBottomOf="@id/labelNik"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
+    <!-- Nomor Telepon -->
     <TextView
         android:id="@+id/labelTelepon"
         android:layout_width="wrap_content"
@@ -105,15 +108,15 @@
         android:layout_marginTop="8dp"
         android:background="@drawable/background_white_button"
         android:padding="10dp"
-        android:inputType="textPassword"
+        android:inputType="phone"
         android:textColor="#000000"
         android:textSize="16sp"
-        android:hint="Masukkan Password"
+        android:hint="Masukkan Nomor Telepon"
         app:layout_constraintTop_toBottomOf="@id/labelTelepon"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Password -->
+    <!-- Email -->
     <TextView
         android:id="@+id/labelEmail"
         android:layout_width="wrap_content"
@@ -136,14 +139,15 @@
         android:layout_marginTop="8dp"
         android:background="@drawable/background_white_button"
         android:padding="10dp"
-        android:inputType="textPassword"
+        android:inputType="textEmailAddress"
         android:textColor="#000000"
         android:textSize="16sp"
-        android:hint="Masukkan Password"
+        android:hint="Masukkan Email"
         app:layout_constraintTop_toBottomOf="@id/labelEmail"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
+    <!-- Password -->
     <TextView
         android:id="@+id/labelPassword"
         android:layout_width="wrap_content"
@@ -209,9 +213,21 @@
         android:textColor="#0000FF"
         android:textSize="14sp"
         android:textStyle="bold"
-        android:autoLink="all"
         app:layout_constraintTop_toBottomOf="@id/txtHaveAccount"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- ProgressBar yang ditambahkan -->
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        tools:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:background="@color/purple"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Transfer">
+
+
+    <LinearLayout
+        android:id="@+id/linearSatu"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_width="match_parent"
+        android:background="@drawable/background_top"
+        android:layout_height="120dp"
+        android:gravity="center_vertical"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Transfer"
+            android:textSize="27sp"
+            android:textStyle="bold"
+            android:textAlignment="center"
+            />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvDompetUtama"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Dompet Utama\t\t10.000.000"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        android:textColor="@android:color/black"
+        android:padding="16dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:background="@drawable/background_white_button"
+        android:elevation="4dp"
+        app:layout_constraintTop_toBottomOf="@id/linearSatu"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <LinearLayout
+        android:id="@+id/linearDua"
+        app:layout_constraintTop_toBottomOf="@+id/tvDompetUtama"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="10dp"
+        android:orientation="vertical"
+        android:padding="25dp"
+        android:background="@drawable/backgroud_form"
+        android:layout_width="382dp"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Jumlah"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/editTextText"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/background_edit_text"
+            android:ems="10"
+            android:inputType="text"
+            android:padding="12dp"
+            android:textColor="#707070"
+            android:textSize="18sp" />
+    </LinearLayout>
+    <ImageView
+        android:id="@+id/ivBCA"
+        android:layout_width="75dp"
+        android:layout_height="60dp"
+        app:layout_constraintTop_toBottomOf="@+id/linearDua"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/background_white_button"
+        android:src="@drawable/logo_bca"
+        />
+
+    <ImageView
+        android:id="@+id/ivGopay"
+        android:layout_width="80dp"
+        android:layout_height="60dp"
+        app:layout_constraintTop_toBottomOf="@+id/linearDua"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="170dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/background_white_button"
+        android:src="@drawable/Logo_Gopay_New"
+        android:padding="10dp"
+        />
+
+    <ImageView
+        android:id="@+id/ivDana"
+        android:layout_width="80dp"
+        android:layout_height="60dp"
+        app:layout_constraintTop_toBottomOf="@+id/linearDua"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="290dp"
+        android:layout_marginTop="20dp"
+        android:padding="10dp"
+        android:background="@drawable/background_white_button"
+        android:src="@drawable/logo_dana"
+        />
+    <Button
+        android:id="@+id/btnBack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Back"
+        android:textColor="@android:color/white"
+        app:backgroundTint="#F44336"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="300dp"
+        android:layout_marginBottom="24dp"
+        android:paddingHorizontal="32dp"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

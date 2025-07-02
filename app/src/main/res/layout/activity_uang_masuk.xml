@@ -55,7 +55,8 @@
             android:layout_marginTop="12dp"
             android:background="@drawable/background_edit_text"
             android:ems="10"
-            android:inputType="text"
+            android:hint="Masukan jumlah"
+            android:inputType="numberDecimal"
             android:padding="12dp"
             android:textColor="#707070"
             android:textSize="18sp" />

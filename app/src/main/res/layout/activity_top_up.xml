@@ -102,7 +102,7 @@
         android:layout_marginStart="170dp"
         android:layout_marginTop="20dp"
         android:background="@drawable/background_white_button"
-        android:src="@drawable/Logo_Gopay_New"
+        android:src="@drawable/logo_gopay_new"
         android:padding="10dp"
         />
 

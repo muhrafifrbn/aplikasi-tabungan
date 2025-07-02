@@ -2,475 +2,155 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/purple"
     tools:context=".DetailTabunganActivity">
 
     <LinearLayout
-        android:id="@+id/linearSatu"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_width="match_parent"
-        android:background="@drawable/background_top"
-        android:layout_height="120dp"
-        android:orientation="vertical">
+    android:id="@+id/linearSatu"
+    android:layout_width="match_parent"
+    android:layout_height="120dp"
+    android:background="@drawable/background_top"
+    android:gravity="center_vertical"
+    android:orientation="vertical"
+    app:layout_constraintTop_toTopOf="parent">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:orientation="horizontal"
-            android:paddingHorizontal="20dp"
-            android:paddingVertical="10dp"
-            android:gravity="center_vertical"
-            android:layout_height="wrap_content">
-            
-            <androidx.appcompat.widget.AppCompatButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@color/white"
-                android:drawableLeft="@drawable/icons_back_dua"
-                />
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1" />
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:layout_width="40dp"
-                android:layout_height="wrap_content"
-                android:background="@color/white"
-                android:drawableLeft="@drawable/icons_trash_tiga" />
-
-        </LinearLayout>
-
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Playstation"
-            android:textSize="27sp"
-            android:textStyle="bold"
-            android:textAlignment="center"
-            />
+    <TextView
+        android:id="@+id/tvDetailNamaTabungan" android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:textSize="27sp"
+        android:textStyle="bold"
+        tools:text="Nama Tabungan" />
     </LinearLayout>
-    
-    
+
+    <ImageButton
+        android:id="@+id/btnBack"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:src="@drawable/icons_back_dua"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:layout_marginStart="16dp"
+        app:layout_constraintStart_toStartOf="@id/linearSatu"
+        app:layout_constraintTop_toTopOf="@id/linearSatu"
+        app:layout_constraintBottom_toBottomOf="@id/linearSatu"
+        android:contentDescription="Tombol Kembali" />
+
     <LinearLayout
         android:id="@+id/linearDua"
-        app:layout_constraintTop_toBottomOf="@id/linearSatu"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_width="382dp"
-        android:layout_height="59dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="16dp"
         android:background="@drawable/backgroud_form"
         android:orientation="horizontal"
-        android:layout_marginTop="20dp"
-        >
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/linearSatu">
 
         <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:orientation="vertical"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content">
+            android:paddingVertical="8dp">
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="20sp"
                 android:text="Target"
                 android:textAlignment="center"
-                android:textStyle="bold"
-                />
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
             <TextView
-                android:layout_width="match_parent"
+                android:id="@+id/tvDetailTarget" android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="20sp"
-                android:text="Rp. 10.000.000"
                 android:textAlignment="center"
+                android:textSize="20sp"
                 android:textStyle="bold"
-                />
-
+                tools:text="Rp. 10.000.000" />
         </LinearLayout>
 
         <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:orientation="vertical"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content">
+            android:paddingVertical="8dp">
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="20sp"
                 android:text="Terkumpul"
                 android:textAlignment="center"
-                android:textStyle="bold"
-                />
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
             <TextView
-                android:layout_width="match_parent"
+                android:id="@+id/tvDetailTerkumpul" android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="20sp"
-                android:text="Rp. 200.000"
                 android:textAlignment="center"
+                android:textSize="20sp"
                 android:textStyle="bold"
-                />
-
+                tools:text="Rp. 0" />
         </LinearLayout>
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/linearTiga"
-        app:layout_constraintTop_toBottomOf="@id/linearDua"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:background="@drawable/backgroud_form"
-        android:orientation="vertical"
-        android:layout_width="382dp"
-        android:paddingVertical="25dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:layout_marginTop="20dp"
-        android:layout_height="500dp">
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/backgroud_form"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="8dp"
+        app:layout_constraintBottom_toTopOf="@id/bottomActionsLayout"
+        app:layout_constraintEnd_toEndOf="@id/linearDua"
+        app:layout_constraintStart_toStartOf="@id/linearDua"
+        app:layout_constraintTop_toBottomOf="@id/linearDua">
 
-
-<!--        Uang Masuk 1-->
-        <LinearLayout
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_width="318dp"
-            android:orientation="horizontal"
-            android:layout_gravity="center_horizontal"
-            android:background="@drawable/background_green"
-            android:layout_height="72dp">
-
-           <LinearLayout
-               android:layout_width="150dp"
-               android:orientation="vertical"
-               android:layout_gravity="center"
-               android:layout_height="wrap_content">
-               <TextView
-                   android:layout_width="match_parent"
-                   android:layout_height="wrap_content"
-                   android:text="Uang Masuk"
-                   android:textAlignment="center"
-                   android:textSize="16sp"
-                   android:textStyle="bold"
-                   android:textColor="@color/white"
-                   />
-               <TextView
-                   android:layout_width="match_parent"
-                   android:layout_height="wrap_content"
-                   android:text="Rp.50.000"
-                   android:textAlignment="center"
-                   android:textSize="27sp"
-                   android:textStyle="bold"
-                   android:textColor="@color/white"
-                   />
-
-           </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="150dp"
-                android:orientation="vertical"
-                android:layout_gravity="center"
-                android:layout_height="wrap_content">
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="02/05/2025"
-                    android:textAlignment="textEnd"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/white"
-                    />
-                <androidx.appcompat.widget.AppCompatButton
-                    android:layout_width="40dp"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/background_green"
-                    android:layout_gravity="end"
-                    android:drawableLeft="@drawable/icons_trash_tiga" />
-
-            </LinearLayout>
-
-
-
-
-
-        </LinearLayout>
-
-
-<!--        Uang Masuk 2-->
-        <LinearLayout
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_width="318dp"
-            android:orientation="horizontal"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="20dp"
-            android:background="@drawable/background_green"
-            android:layout_height="72dp">
-
-            <LinearLayout
-                android:layout_width="150dp"
-                android:orientation="vertical"
-                android:layout_gravity="center"
-                android:layout_height="wrap_content">
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Uang Masuk"
-                    android:textAlignment="center"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/white"
-                    />
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Rp.200.000"
-                    android:textAlignment="center"
-                    android:textSize="27sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/white"
-                    />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="150dp"
-                android:orientation="vertical"
-                android:layout_gravity="center"
-                android:layout_height="wrap_content">
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="05/05/2025"
-                    android:textAlignment="textEnd"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/white"
-                    />
-
-                <androidx.appcompat.widget.AppCompatButton
-                    android:layout_width="40dp"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/background_green"
-                    android:layout_gravity="end"
-                    android:drawableLeft="@drawable/icons_trash_tiga" />
-            </LinearLayout>
-
-        </LinearLayout>
-
-<!--        Uang Masuk 3-->
-        <LinearLayout
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_width="318dp"
-            android:orientation="horizontal"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="20dp"
-            android:background="@drawable/background_green"
-            android:layout_height="72dp">
-
-            <LinearLayout
-                android:layout_width="150dp"
-                android:orientation="vertical"
-                android:layout_gravity="center"
-                android:layout_height="wrap_content">
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Uang Masuk"
-                    android:textAlignment="center"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/white"
-                    />
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Rp.300.000"
-                    android:textAlignment="center"
-                    android:textSize="27sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/white"
-                    />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="150dp"
-                android:orientation="vertical"
-                android:layout_gravity="center"
-                android:layout_height="wrap_content">
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="07/05/2025"
-                    android:textAlignment="textEnd"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/white"
-                    />
-                <androidx.appcompat.widget.AppCompatButton
-                    android:layout_width="40dp"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/background_green"
-                    android:layout_gravity="end"
-                    android:drawableLeft="@drawable/icons_trash_tiga" />
-            </LinearLayout>
-
-        </LinearLayout>
-
-<!--        Uang Masuk 4-->
-        <LinearLayout
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_width="318dp"
-            android:orientation="horizontal"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="20dp"
-            android:background="@drawable/background_red"
-            android:layout_height="72dp">
-
-            <LinearLayout
-                android:layout_width="150dp"
-                android:orientation="vertical"
-                android:layout_gravity="center"
-                android:layout_height="wrap_content">
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Uang Keluar"
-                    android:textAlignment="center"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/white"
-                    />
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Rp.100.000"
-                    android:textAlignment="center"
-                    android:textSize="27sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/white"
-                    />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="150dp"
-                android:orientation="vertical"
-                android:layout_gravity="center"
-                android:layout_height="wrap_content">
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="09/05/2025"
-                    android:textAlignment="textEnd"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/white"
-                    />
-                <androidx.appcompat.widget.AppCompatButton
-                    android:layout_width="40dp"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/background_red"
-                    android:layout_gravity="end"
-                    android:drawableLeft="@drawable/icons_trash_tiga" />
-            </LinearLayout>
-
-        </LinearLayout>
-
-<!--        Uang Keluar 5-->
-        <LinearLayout
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_width="318dp"
-            android:orientation="horizontal"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="20dp"
-            android:background="@drawable/background_red"
-            android:layout_height="72dp">
-
-            <LinearLayout
-                android:layout_width="150dp"
-                android:orientation="vertical"
-                android:layout_gravity="center"
-                android:layout_height="wrap_content">
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Uang Keluar"
-                    android:textAlignment="center"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/white"
-                    />
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Rp.50.000"
-                    android:textAlignment="center"
-                    android:textSize="27sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/white"
-                    />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="150dp"
-                android:orientation="vertical"
-                android:layout_gravity="center"
-                android:layout_height="wrap_content">
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="12/05/2025"
-                    android:textAlignment="textEnd"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/white"
-                    />
-                <androidx.appcompat.widget.AppCompatButton
-                    android:layout_width="40dp"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/background_red"
-                    android:layout_gravity="end"
-                    android:drawableLeft="@drawable/icons_trash_tiga" />
-            </LinearLayout>
-
-        </LinearLayout>
-
-
-    </LinearLayout>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvRiwayat"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:listitem="@layout/item_riwayat"/> </LinearLayout>
 
     <LinearLayout
-        app:layout_constraintTop_toBottomOf="@id/linearTiga"
-        app:layout_constraintStart_toStartOf="parent"
-        android:orientation="vertical"
-        android:layout_width="382dp"
-        android:layout_marginTop="20dp"
-        android:layout_height="wrap_content">
-        
-        <androidx.appcompat.widget.AppCompatButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="+ Menabung"
-            android:background="@drawable/background_green"
-            android:textSize="15sp"
-            android:textColor="@color/white"
-            android:paddingVertical="5dp"
-            android:textStyle="bold"
-            android:paddingHorizontal="20dp"
-            android:layout_gravity="end"
-            android:layout_marginBottom="10dp"
-            />
+        android:id="@+id/bottomActionsLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/linearTiga"
+        app:layout_constraintStart_toStartOf="@id/linearTiga">
 
         <androidx.appcompat.widget.AppCompatButton
-            android:layout_width="wrap_content"
+            android:id="@+id/btnAmbil" android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="- Ambil Tabungan"
+            android:layout_marginEnd="8dp"
+            android:layout_weight="1"
             android:background="@drawable/background_red"
-            android:textSize="15sp"
+            android:text="- Ambil Tabungan"
             android:textColor="@color/white"
-            android:paddingVertical="5dp"
-            android:textStyle="bold"
-            android:paddingHorizontal="20dp"
-            android:layout_gravity="end"
-            />
-        
+            android:textSize="15sp"
+            android:textStyle="bold" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnMenabung" android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_weight="1"
+            android:background="@drawable/background_green"
+            android:text="+ Menabung"
+            android:textColor="@color/white"
+            android:textSize="15sp"
+            android:textStyle="bold" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

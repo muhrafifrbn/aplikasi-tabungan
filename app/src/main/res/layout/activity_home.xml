@@ -46,21 +46,21 @@
         app:layout_constraintTop_toBottomOf="@id/illustration" />
 
     <TextView
-        android:id="@+id/linkSignIn"
+        android:id="@+id/linkSignUp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:autoLink="all"
-        android:text="Sign in here"
+        android:text="Sign Up here"
         android:textColor="#0000FF"
         android:textSize="14sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.504"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textSignIn" />
+        app:layout_constraintTop_toBottomOf="@id/textSignUp" />
 
     <TextView
-        android:id="@+id/textSignIn"
+        android:id="@+id/textSignUp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"

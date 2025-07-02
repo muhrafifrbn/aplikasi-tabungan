@@ -20,6 +20,7 @@
         android:orientation="vertical">
 
         <TextView
+            android:id="@+id/tvTambahTabungan"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Tambah \n Tabungan"
@@ -41,7 +42,7 @@
         android:layout_height="wrap_content">
 
             <TextView
-                android:id="@+id/textView5"
+                android:id="@+id/tvNamaTarget"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Nama Target"
@@ -50,19 +51,20 @@
                 android:textStyle="bold" />
 
             <EditText
-                android:id="@+id/editTextText"
+                android:id="@+id/etNamaTarget"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginTop="12dp"
                 android:background="@drawable/background_edit_text"
                 android:ems="10"
+                android:hint="Tulis nama target"
                 android:inputType="text"
                 android:padding="12dp"
                 android:textColor="#707070"
                 android:textSize="18sp" />
 
             <TextView
-                android:id="@+id/textView6"
+                android:id="@+id/tvTarget"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="32dp"
@@ -72,18 +74,20 @@
                 android:textStyle="bold" />
 
             <EditText
-                android:id="@+id/editPasswordText"
+                android:id="@+id/etTargetTabungan"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginTop="12dp"
+                android:hint="Tulis target tabungan"
                 android:background="@drawable/background_edit_text"
                 android:ems="10"
-                android:inputType="textPassword"
+                android:inputType="numberDecimal"
                 android:padding="12dp"
                 android:textColor="#707070"
                 android:textSize="18sp" />
 
         <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnSimpan"
             android:layout_width="wrap_content"
             android:layout_height="57dp"
             android:layout_marginTop="30dp"

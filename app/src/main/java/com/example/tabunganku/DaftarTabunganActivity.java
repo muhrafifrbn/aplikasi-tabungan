@@ -1,97 +1,93 @@
 package com.example.tabunganku;
-
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
+import androidx.viewpager2.widget.ViewPager2;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-
+import com.google.firebase.database.*;
 import java.text.NumberFormat;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 
 public class DaftarTabunganActivity extends AppCompatActivity {
 
-    // Firebase
     private FirebaseAuth mAuth;
     private DatabaseReference dbReference;
     private FirebaseUser currentUser;
-
-    // UI Components
     private TextView tvDompetUtama;
-    private RecyclerView recyclerViewTabungan;
-    private TabunganAdapter adapter;
-
-    // Firebase Listeners & References
-    private ValueEventListener tabunganListener, dompetListener;
-    private DatabaseReference tabunganRef, dompetRef;
-
+    private ValueEventListener dompetListener;
+    private DatabaseReference dompetRef;
+    private ViewPager2 viewPager;
+    private TabLayout tabLayout;
+    private ViewPagerAdapter viewPagerAdapter;
+    private Button btnTransfer,btnTopUp;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_daftar_tabungan);
 
-        // Inisialisasi Firebase
         mAuth = FirebaseAuth.getInstance();
         dbReference = FirebaseDatabase.getInstance().getReference();
         currentUser = mAuth.getCurrentUser();
 
-        // Hubungkan UI
         tvDompetUtama = findViewById(R.id.tvDompetUtama);
-        ImageButton btnLogout = findViewById(R.id.btnLogout); // Pastikan ID ini benar di XML Anda
+        ImageButton btnLogout = findViewById(R.id.btnLogout);
         FloatingActionButton fabAdd = findViewById(R.id.fabAdd);
-
-        // Jika tidak ada user yang login, langsung ke halaman Login
+        viewPager = findViewById(R.id.viewPager);
+        tabLayout = findViewById(R.id.tabLayout);
+        btnTransfer = findViewById(R.id.btnTransfer);
+        btnTopUp = findViewById(R.id.btnTopUp);
         if (currentUser == null) {
             goToLogin();
             return;
         }
 
-        // Definisikan path database di sini
         String uid = currentUser.getUid();
         dompetRef = dbReference.child("users").child(uid).child("dompetUtama");
-        tabunganRef = dbReference.child("users").child(uid).child("tabungan");
 
-        // Panggil method untuk setup UI
-        setupRecyclerView();
+        // Setup ViewPager dan TabLayout
+        viewPagerAdapter = new ViewPagerAdapter(this);
+        viewPager.setAdapter(viewPagerAdapter);
+        new TabLayoutMediator(tabLayout, viewPager, (tab, position) -> {
+            if (position == 0) {
+                tab.setText("Tabungan");
+            } else {
+                tab.setText("Riwayat");
+            }
+        }).attach();
 
-        // Atur listener untuk tombol-tombol
         btnLogout.setOnClickListener(v -> logoutUser());
         fabAdd.setOnClickListener(v -> {
-            Intent intent = new Intent(DaftarTabunganActivity.this, TambahTabunganActivity.class);
-            startActivity(intent);
+            startActivity(new Intent(DaftarTabunganActivity.this, TambahTabunganActivity.class));
         });
-    }
 
-    private void setupRecyclerView() {
-        recyclerViewTabungan = findViewById(R.id.recyclerViewTabungan);
-        recyclerViewTabungan.setLayoutManager(new LinearLayoutManager(this));
-        // Inisialisasi adapter kosong. Data akan diisi oleh listener.
-        adapter = new TabunganAdapter();
-        recyclerViewTabungan.setAdapter(adapter);
+        btnTransfer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(DaftarTabunganActivity.this, Transfer.class));
+            }
+        });
+
+        btnTopUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(DaftarTabunganActivity.this, TopUp.class));
+            }
+        });
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        // Mulai mendengarkan data saat activity terlihat oleh pengguna
-
-        // 1. Listener untuk Dompet Utama
         if (dompetListener == null) {
             dompetListener = new ValueEventListener() {
                 @Override
@@ -111,48 +107,14 @@ public class DaftarTabunganActivity extends AppCompatActivity {
             };
             dompetRef.addValueEventListener(dompetListener);
         }
-
-        // 2. Listener untuk Daftar Tabungan
-        if (tabunganListener == null) {
-            tabunganListener = new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    List<Tabungan> newList = new ArrayList<>();
-                    for (DataSnapshot itemSnapshot : snapshot.getChildren()) {
-                        // Ambil objek Tabungan
-                        Tabungan tabungan = itemSnapshot.getValue(Tabungan.class);
-                        if (tabungan != null) {
-                            // Ambil ID unik dari snapshot
-                            String key = itemSnapshot.getKey();
-                            // Set ID tersebut ke dalam objek Tabungan
-                            tabungan.setId(key);
-                            // Tambahkan objek yang sudah lengkap ke list
-                            newList.add(tabungan);
-                        }
-                    }
-                    adapter.setData(newList);
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-                    Toast.makeText(DaftarTabunganActivity.this, "Gagal memuat data tabungan.", Toast.LENGTH_SHORT).show();
-                }
-            };
-            tabunganRef.addValueEventListener(tabunganListener);
-        }
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        // Hentikan listener saat activity tidak lagi terlihat untuk menghemat baterai dan data
         if (dompetListener != null) {
             dompetRef.removeEventListener(dompetListener);
-            dompetListener = null; // Set null agar dibuat ulang di onStart()
-        }
-        if (tabunganListener != null) {
-            tabunganRef.removeEventListener(tabunganListener);
-            tabunganListener = null; // Set null agar dibuat ulang di onStart()
+            dompetListener = null;
         }
     }
 

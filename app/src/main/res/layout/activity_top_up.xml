@@ -3,61 +3,72 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
-    android:background="@color/purple"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/purple"
     tools:context=".TopUp">
 
 
     <LinearLayout
         android:id="@+id/linearSatu"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         android:layout_width="match_parent"
-        android:background="@drawable/background_top"
         android:layout_height="120dp"
+        android:background="@drawable/background_top"
         android:gravity="center_vertical"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Top Up"
-            android:textSize="27sp"
-            android:textStyle="bold"
             android:textAlignment="center"
-            />
+            android:textSize="27sp"
+            android:textStyle="bold" />
+
+        <ImageButton
+            android:id="@+id/btnBack"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="start"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="-40dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Tombol Kembali"
+            android:src="@drawable/icons_back_dua" />
+
     </LinearLayout>
 
     <TextView
         android:id="@+id/tvDompetUtama"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Dompet Utama\t\t10.000.000"
-        android:textStyle="bold"
-        android:textSize="16sp"
-        android:textColor="@android:color/black"
-        android:padding="16dp"
-        android:layout_marginTop="10dp"
         android:layout_marginStart="24dp"
+        android:layout_marginTop="10dp"
         android:layout_marginEnd="24dp"
         android:background="@drawable/background_white_button"
         android:elevation="4dp"
-        app:layout_constraintTop_toBottomOf="@id/linearSatu"
+        android:padding="16dp"
+        android:textColor="@android:color/black"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintTop_toBottomOf="@id/linearSatu"
+        tools:text="Dompet Utama\t\t10.000.000" />
 
     <LinearLayout
         android:id="@+id/linearDua"
-        app:layout_constraintTop_toBottomOf="@+id/tvDompetUtama"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
+        android:background="@drawable/backgroud_form"
         android:orientation="vertical"
         android:padding="25dp"
-        android:background="@drawable/backgroud_form"
-        android:layout_width="382dp"
-        android:layout_height="wrap_content">
+        app:layout_constraintEnd_toEndOf="@id/tvDompetUtama"
+        app:layout_constraintStart_toStartOf="@id/tvDompetUtama"
+        app:layout_constraintTop_toBottomOf="@+id/tvDompetUtama">
 
         <TextView
             android:id="@+id/textView5"
@@ -69,66 +80,54 @@
             android:textStyle="bold" />
 
         <EditText
-            android:id="@+id/editTextText"
+            android:id="@+id/etJumlahTopUp"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginTop="12dp"
             android:background="@drawable/background_edit_text"
             android:ems="10"
-            android:inputType="text"
+            android:hint="Contoh: 50000"
+            android:inputType="number"
             android:padding="12dp"
             android:textColor="#707070"
             android:textSize="18sp" />
 
     </LinearLayout>
+
     <ImageView
         android:id="@+id/ivBCA"
-        android:layout_width="75dp"
+        android:layout_width="80dp"
         android:layout_height="60dp"
-        app:layout_constraintTop_toBottomOf="@+id/linearDua"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginStart="50dp"
         android:layout_marginTop="20dp"
         android:background="@drawable/background_white_button"
         android:src="@drawable/logo_bca"
-        />
+        app:layout_constraintEnd_toStartOf="@+id/ivGopay"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearDua" />
 
     <ImageView
         android:id="@+id/ivGopay"
         android:layout_width="80dp"
         android:layout_height="60dp"
-        app:layout_constraintTop_toBottomOf="@+id/linearDua"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginStart="170dp"
-        android:layout_marginTop="20dp"
         android:background="@drawable/background_white_button"
-        android:src="@drawable/logo_gopay_new"
         android:padding="10dp"
-        />
+        android:src="@drawable/logo_gopay_new"
+        app:layout_constraintEnd_toStartOf="@+id/ivDana"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/ivBCA"
+        app:layout_constraintTop_toTopOf="@+id/ivBCA" />
 
     <ImageView
         android:id="@+id/ivDana"
         android:layout_width="80dp"
         android:layout_height="60dp"
-        app:layout_constraintTop_toBottomOf="@+id/linearDua"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginStart="290dp"
-        android:layout_marginTop="20dp"
-        android:padding="10dp"
         android:background="@drawable/background_white_button"
+        android:padding="10dp"
         android:src="@drawable/logo_dana"
-        />
-    <Button
-        android:id="@+id/btnBack"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Back"
-        android:textColor="@android:color/white"
-        app:backgroundTint="#F44336"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginStart="300dp"
-        android:layout_marginBottom="24dp"
-        android:paddingHorizontal="32dp"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/ivGopay"
+        app:layout_constraintTop_toTopOf="@+id/ivGopay" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

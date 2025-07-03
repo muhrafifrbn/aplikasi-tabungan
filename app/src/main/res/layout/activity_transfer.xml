@@ -118,17 +118,16 @@
         android:background="@drawable/background_white_button"
         android:src="@drawable/logo_dana"
         />
-    <Button
+    <ImageButton
         android:id="@+id/btnBack"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Back"
-        android:textColor="@android:color/white"
-        app:backgroundTint="#F44336"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginStart="300dp"
-        android:layout_marginBottom="24dp"
-        android:paddingHorizontal="32dp"/>
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:src="@drawable/icons_back_dua"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:layout_marginStart="16dp"
+        app:layout_constraintStart_toStartOf="@id/linearSatu"
+        app:layout_constraintTop_toTopOf="@id/linearSatu"
+        app:layout_constraintBottom_toBottomOf="@id/linearSatu"
+        android:contentDescription="Tombol Kembali" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

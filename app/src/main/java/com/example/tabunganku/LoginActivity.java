@@ -49,7 +49,6 @@ public class LoginActivity extends AppCompatActivity {
         txtSignUpHere = findViewById(R.id.txtSignUpHere);
         progressBar = findViewById(R.id.progressBar);
 
-        // Listener untuk tombol Login
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -57,7 +56,6 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        // Listener untuk teks "Sign up here"
         txtSignUpHere.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -135,7 +133,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void redirectToMainPage() {
-        // Pindah ke DaftarTabunganActivity
+// Pindah ke DaftarTabunganActivity
         Intent intent = new Intent(LoginActivity.this, DaftarTabunganActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);

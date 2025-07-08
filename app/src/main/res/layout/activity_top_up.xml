@@ -86,7 +86,7 @@
             android:layout_marginTop="12dp"
             android:background="@drawable/background_edit_text"
             android:ems="10"
-            android:hint="Contoh: 50000"
+            android:hint="Masukkan Jumlah"
             android:inputType="number"
             android:padding="12dp"
             android:textColor="#707070"

@@ -26,6 +26,17 @@
             android:textStyle="bold"
             android:textAlignment="center"
             />
+
+        <ImageButton
+            android:id="@+id/btnBack"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="start"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="-40dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Tombol Kembali"
+            android:src="@drawable/icons_back_dua" />
     </LinearLayout>
 
     <LinearLayout
@@ -63,10 +74,11 @@
 
 
         <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnTambah"
             android:layout_width="wrap_content"
             android:layout_height="57dp"
             android:layout_marginTop="30dp"
-            android:text="Tambah"
+            android:text="Tabung"
             android:textSize="28sp"
             android:textColor="@color/white"
             android:background="@drawable/background_button"

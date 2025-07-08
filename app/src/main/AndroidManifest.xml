@@ -17,10 +17,10 @@
             android:exported="false" />
         <activity
             android:name=".TopUp"
-            android:exported="true"></activity>
+            android:exported="true" />
         <activity
             android:name=".Transfer"
-            android:exported="true"></activity>
+            android:exported="true" />
         <activity
             android:name=".DaftarTabunganActivity"
             android:exported="false" />

@@ -1,11 +1,13 @@
 package com.example.tabunganku;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -21,18 +23,22 @@ import java.util.Locale;
 public class DetailTabunganActivity extends AppCompatActivity {
 
     private TextView tvNamaTabungan, tvTarget, tvTerkumpul;
-    private String tabunganId;
+    private AppCompatButton btnAmbil, btnMenabung;
     private ImageButton btnBack;
+
     private FirebaseAuth mAuth;
-    private DatabaseReference dbReference;
     private FirebaseUser currentUser;
+    private DatabaseReference dbReference;
+
+    private String tabunganId;
+    private NumberFormat format = NumberFormat.getInstance(new Locale("id", "ID"));
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_tabungan);
 
-        // Ambil ID yang dikirim dari adapter
+        // Ambil ID tabungan dari intent
         tabunganId = getIntent().getStringExtra("TABUNGAN_ID");
 
         // Inisialisasi Firebase
@@ -40,57 +46,68 @@ public class DetailTabunganActivity extends AppCompatActivity {
         currentUser = mAuth.getCurrentUser();
         dbReference = FirebaseDatabase.getInstance().getReference();
 
-        // Hubungkan UI
-        tvNamaTabungan = findViewById(R.id.tvDetailNamaTabungan);
-        tvTarget = findViewById(R.id.tvDetailTarget);
-        tvTerkumpul = findViewById(R.id.tvDetailTerkumpul);
-        btnBack = findViewById(R.id.btnBack);
-
-        // Validasi, jika tidak ada user atau ID, tutup activity
-        if (currentUser == null || tabunganId == null) {
-            Toast.makeText(this, "Data tidak valid.", Toast.LENGTH_SHORT).show();
+        // Validasi user dan tabungan
+        if (currentUser == null || tabunganId == null || tabunganId.isEmpty()) {
+            Toast.makeText(this, "Data tidak valid", Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
 
-        // Panggil fungsi untuk memuat data dari Firebase
-        loadTabunganDetails();
+        // Inisialisasi komponen UI
+        tvNamaTabungan = findViewById(R.id.tvDetailNamaTabungan);
+        tvTarget = findViewById(R.id.tvDetailTarget);
+        tvTerkumpul = findViewById(R.id.tvDetailTerkumpul);
+        btnAmbil = findViewById(R.id.btnAmbil);
+        btnMenabung = findViewById(R.id.btnMenabung);
+        btnBack = findViewById(R.id.btnBack);
 
-        btnBack.setOnClickListener(v -> {
-            // Menutup activity saat ini dan kembali ke activity sebelumnya (DaftarTabunganActivity)
-            finish();
+        // Tombol kembali
+        btnBack.setOnClickListener(v -> finish());
+
+        // Tombol ambil tabungan → ke UangKeluarActivity
+        btnAmbil.setOnClickListener(v -> {
+            Intent intent = new Intent(DetailTabunganActivity.this, UangKeluarActivity.class);
+            intent.putExtra("TABUNGAN_ID", tabunganId);
+            startActivity(intent);
         });
+
+        // Tombol menabung → ke UangMasukActivity
+        btnMenabung.setOnClickListener(v -> {
+            Intent intent = new Intent(DetailTabunganActivity.this, UangMasukActivity.class);
+            intent.putExtra("TABUNGAN_ID", tabunganId);
+            startActivity(intent);
+        });
+
+        // Load data tabungan
+        loadTabunganDetails();
     }
 
     private void loadTabunganDetails() {
-        // Buat referensi langsung ke item tabungan yang spesifik
-        DatabaseReference tabunganRef = dbReference.child("users")
+        DatabaseReference tabunganRef = dbReference
+                .child("users")
                 .child(currentUser.getUid())
                 .child("tabungan")
                 .child(tabunganId);
 
-        // Tambahkan listener untuk membaca data
         tabunganRef.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
+            public void onDataChange(DataSnapshot snapshot) {
                 if (snapshot.exists()) {
-                    // Konversi data dari snapshot ke objek Tabungan
                     Tabungan tabungan = snapshot.getValue(Tabungan.class);
                     if (tabungan != null) {
-                        // Format angka
-                        NumberFormat format = NumberFormat.getInstance(Locale.GERMANY);
-
-                        // Set data ke TextViews
                         tvNamaTabungan.setText(tabungan.getNama());
                         tvTarget.setText("Rp. " + format.format(tabungan.getTarget()));
                         tvTerkumpul.setText("Rp. " + format.format(tabungan.getTerkumpul()));
                     }
+                } else {
+                    Toast.makeText(DetailTabunganActivity.this, "Data tabungan tidak ditemukan", Toast.LENGTH_SHORT).show();
+                    finish();
                 }
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(DetailTabunganActivity.this, "Gagal memuat detail.", Toast.LENGTH_SHORT).show();
+            public void onCancelled(DatabaseError error) {
+                Toast.makeText(DetailTabunganActivity.this, "Gagal memuat data", Toast.LENGTH_SHORT).show();
             }
         });
     }

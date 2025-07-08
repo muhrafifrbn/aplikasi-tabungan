@@ -21,15 +21,19 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class ProfileActivity extends AppCompatActivity {
 
-    private EditText inputNama, inputNIK, inputTelepon, inputEmail, inputPassword;
+    private EditText inputNama, inputNIK, inputTelepon, inputEmail;
     private Button btnUpdate, btnBack, btnLogOut;
     private TextView txtBack;
     private ProgressBar progressBar;
@@ -74,7 +78,6 @@ public class ProfileActivity extends AppCompatActivity {
         inputNIK = findViewById(R.id.inputNIK);
         inputTelepon = findViewById(R.id.inputTelepon);
         inputEmail = findViewById(R.id.inputEmail);
-        inputPassword = findViewById(R.id.inputPassword);
         btnUpdate = findViewById(R.id.btnUpdate);
         btnBack = findViewById(R.id.btnBack);
         btnLogOut = findViewById(R.id.btnLogout);
@@ -118,7 +121,6 @@ public class ProfileActivity extends AppCompatActivity {
         final String nik = inputNIK.getText().toString().trim();
         final String telepon = inputTelepon.getText().toString().trim();
         final String email = inputEmail.getText().toString().trim();
-        String password = inputPassword.getText().toString().trim();
 
         // Validasi input
         if (TextUtils.isEmpty(nama)) {
@@ -141,39 +143,84 @@ public class ProfileActivity extends AppCompatActivity {
             inputEmail.requestFocus();
             return;
         }
-        if (TextUtils.isEmpty(password) || password.length() < 6) {
-            inputPassword.setError("Password minimal harus 6 karakter.");
-            inputPassword.requestFocus();
-            return;
-        }
+
 
         // Tampilkan ProgressBar sebelum memulai proses
         progressBar.setVisibility(View.VISIBLE);
 
-        // Cek Keunikan NIK di Realtime Database
-        databaseReference.orderByChild("nik").equalTo(nik)
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        if (snapshot.exists()) {
-                            // Jika NIK sudah ada, sembunyikan ProgressBar dan tampilkan pesan
-                            progressBar.setVisibility(View.GONE);
-                            Toast.makeText(getApplicationContext(), "NIK sudah terdaftar.", Toast.LENGTH_LONG).show();
-                        } else {
-                            // NIK unik, lanjutkan pendaftaran (ProgressBar tetap terlihat)
-//                            createFirebaseUser(email, password, nama, nik, telepon);
-                            progressBar.setVisibility(View.GONE);
-                            Toast.makeText(getApplicationContext(), "NIK Belum terdaftar.", Toast.LENGTH_LONG).show();
-                        }
+        // Mendapatkan UID pengguna yang sedang login
+        String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        // Ambil NIK pengguna yang sudah ada di database untuk membandingkan dengan NIK baru
+        databaseReference.child(uid).get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DataSnapshot dataSnapshot = task.getResult();
+                String currentNik = dataSnapshot.child("nik").getValue(String.class);
+
+                // Periksa apakah NIK yang dimasukkan berbeda dengan NIK yang sudah ada
+                if (currentNik.equals(nik)) {
+                    // Jika NIK tidak berubah, langsung update data pengguna tanpa validasi NIK
+//                    updateUserDataInDatabase(uid, nama, nik, telepon, email);
+                    // NIK unik, lanjutkan update data pengguna
+                    FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+
+                    // Memeriksa apakah email baru sama dengan email yang ada
+                    if (currentUser != null && email.equals(currentUser.getEmail())) {
+                        // Jika email tidak berubah, hanya update data lainnya di Realtime Database
+                        updateUserDataInDatabase(uid, nama, nik, telepon, email);
+                    } else {
+                        // Jika email berubah, update email di Firebase Authentication
+                        updateEmailInAuthentication(currentUser, uid, nama, nik, telepon, email);
+                        Log.d("statu-email", "Berubah");
                     }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-                        // Jika gagal, sembunyikan ProgressBar dan tampilkan pesan error
-                        progressBar.setVisibility(View.GONE);
-                        Toast.makeText(getApplicationContext(), "Error: " + error.getMessage(), Toast.LENGTH_LONG).show();
-                    }
-                });
+                } else {
+                    // Jika NIK berbeda, lakukan validasi NIK
+                    validateAndUpdateNIK(uid, nama, nik, telepon, email);
+                }
+            } else {
+                progressBar.setVisibility(View.GONE);
+                Toast.makeText(getApplicationContext(), "Gagal mengambil data pengguna.", Toast.LENGTH_LONG).show();
+            }
+        });
+
+        // Cek Keunikan NIK di Realtime Database
+//        databaseReference.orderByChild("nik").equalTo(nik)
+//                .addListenerForSingleValueEvent(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                        if (snapshot.exists()) {
+//                            // Jika NIK sudah ada, sembunyikan ProgressBar dan tampilkan pesan
+//                            progressBar.setVisibility(View.GONE);
+//                            Toast.makeText(getApplicationContext(), "NIK sudah terdaftar.", Toast.LENGTH_LONG).show();
+//                        } else {
+//                            // NIK unik, lanjutkan pendaftaran (ProgressBar tetap terlihat)
+////                            createFirebaseUser(email, password, nama, nik, telepon);
+////                            progressBar.setVisibility(View.GONE);
+////                            Toast.makeText(getApplicationContext(), "NIK Belum terdaftar.", Toast.LENGTH_LONG).show();
+////                            updateUserToFirebase(nama, nik, email, telepon);
+//                            // NIK unik, lanjutkan update data pengguna
+//                            String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+//                            FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+//
+//                            // Memeriksa apakah email baru sama dengan email yang ada
+//                            if (currentUser != null && email.equals(currentUser.getEmail())) {
+//                                // Jika email tidak berubah, hanya update data lainnya di Realtime Database
+//                                updateUserDataInDatabase(uid, nama, nik, telepon, email);
+//                            } else {
+//                                // Jika email berubah, update email di Firebase Authentication
+//                                updateEmailInAuthentication(currentUser, uid, nama, nik, telepon, email);
+//                            }
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(@NonNull DatabaseError error) {
+//                        // Jika gagal, sembunyikan ProgressBar dan tampilkan pesan error
+//                        progressBar.setVisibility(View.GONE);
+//                        Toast.makeText(getApplicationContext(), "Error: " + error.getMessage(), Toast.LENGTH_LONG).show();
+//                    }
+//                });
     }
 
     private void logoutUser() {
@@ -187,5 +234,137 @@ public class ProfileActivity extends AppCompatActivity {
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
         finish();
+    }
+
+//    private void updateUserToFirebase(String nama, String nik, String email, String telepon){
+//        // NIK unik, lanjutkan update data pengguna
+//        String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+//
+//        // Membuat Map untuk data yang akan diupdate
+//        Map<String, Object> userData = new HashMap<>();
+//        userData.put("namaLengkap", nama);
+//        userData.put("nik", nik);
+//        userData.put("nomorTelepon", telepon);
+//        userData.put("email", email);
+//        userData.put("uid", uid);
+//
+//         // Update data pengguna di Realtime Database
+//        databaseReference.child(uid).updateChildren(userData)
+//                .addOnCompleteListener(task -> {
+//                    if (task.isSuccessful()) {
+//                        // Setelah berhasil update di Realtime Database, update email di Firebase Authentication
+//                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+//                        if (user != null) {
+//                            user.updateEmail(email).addOnCompleteListener(updateTask -> {
+//                                if (updateTask.isSuccessful()) {
+//                                    // Kirimkan email verifikasi
+//                                    user.sendEmailVerification().addOnCompleteListener(verificationTask -> {
+//                                        if (verificationTask.isSuccessful()) {
+//                                            progressBar.setVisibility(View.GONE);
+//                                            Toast.makeText(getApplicationContext(), "Email berhasil diperbarui. Cek email Anda untuk verifikasi.", Toast.LENGTH_SHORT).show();
+//                                        } else {
+//                                            progressBar.setVisibility(View.GONE);
+//                                            Toast.makeText(getApplicationContext(), "Gagal mengirim email verifikasi.", Toast.LENGTH_SHORT).show();
+//                                        }
+//                                    });
+//                                } else {
+//                                    progressBar.setVisibility(View.GONE);
+//                                    Toast.makeText(getApplicationContext(), "Gagal memperbarui email di Authentication.", Toast.LENGTH_SHORT).show();
+//                                }
+//                            });
+//                        }
+//                    } else {
+//                        progressBar.setVisibility(View.GONE);
+//                        Toast.makeText(getApplicationContext(), "Gagal memperbarui data.", Toast.LENGTH_SHORT).show();
+//                    }
+//                });
+//    }
+
+
+    // Fungsi untuk memvalidasi NIK dan memperbarui data pengguna jika NIK baru unik
+    private void validateAndUpdateNIK(String uid, String nama, String nik, String telepon, String email) {
+        // Cek apakah NIK baru sudah terdaftar di Realtime Database
+        databaseReference.orderByChild("nik").equalTo(nik)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if (snapshot.exists()) {
+                            // Jika NIK sudah ada, sembunyikan ProgressBar dan tampilkan pesan
+                            progressBar.setVisibility(View.GONE);
+                            Toast.makeText(getApplicationContext(), "NIK sudah terdaftar.", Toast.LENGTH_LONG).show();
+                        } else {
+                            // NIK unik, lanjutkan update data pengguna
+                            String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                            FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+
+                            // Memeriksa apakah email baru sama dengan email yang ada
+                            if (currentUser != null && email.equals(currentUser.getEmail())) {
+                                // Jika email tidak berubah, hanya update data lainnya di Realtime Database
+                                updateUserDataInDatabase(uid, nama, nik, telepon, email);
+                            } else {
+                                // Jika email berubah, update email di Firebase Authentication
+                                updateEmailInAuthentication(currentUser, uid, nama, nik, telepon, email);
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        // Jika gagal, sembunyikan ProgressBar dan tampilkan pesan error
+                        progressBar.setVisibility(View.GONE);
+                        Toast.makeText(getApplicationContext(), "Error: " + error.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                });
+    }
+
+
+    // Fungsi untuk memperbarui data pengguna di Realtime Database
+    private void updateUserDataInDatabase(String uid, String nama, String nik, String telepon, String email) {
+        Map<String, Object> userData = new HashMap<>();
+        userData.put("namaLengkap", nama);
+        userData.put("nik", nik);
+        userData.put("nomorTelepon", telepon);
+        userData.put("email", email);
+        userData.put("uid", uid);
+
+        // Update data pengguna di Realtime Database
+        databaseReference.child(uid).updateChildren(userData)
+                .addOnCompleteListener(task -> {
+                    progressBar.setVisibility(View.GONE);
+                    if (task.isSuccessful()) {
+                        Toast.makeText(getApplicationContext(), "Data berhasil diperbarui.", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getApplicationContext(), "Gagal memperbarui data.", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+
+    // Fungsi untuk memperbarui email di Firebase Authentication dan mengirimkan email verifikasi
+    private void updateEmailInAuthentication(FirebaseUser currentUser, String uid, String nama, String nik, String telepon, String email) {
+        // Perbarui email terlebih dahulu
+        currentUser.updateEmail(email).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                // Jika email berhasil diperbarui, kirimkan email verifikasi
+                currentUser.sendEmailVerification().addOnCompleteListener(verificationTask -> {
+                    if (verificationTask.isSuccessful()) {
+                        // Setelah berhasil memperbarui email dan mengirimkan email verifikasi, update data di Realtime Database
+                        updateUserDataInDatabase(uid, nama, nik, telepon, email);
+
+                        progressBar.setVisibility(View.GONE);
+                        Toast.makeText(getApplicationContext(), "Email berhasil diperbarui. Cek email Anda untuk verifikasi.", Toast.LENGTH_SHORT).show();
+                    } else {
+                        progressBar.setVisibility(View.GONE);
+                        Log.e("UpdateEmail", "Gagal mengirim email verifikasi: " + verificationTask.getException().getMessage());
+                        Toast.makeText(getApplicationContext(), "Gagal mengirim email verifikasi.", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            } else {
+                // Jika gagal memperbarui email, tampilkan pesan error
+                progressBar.setVisibility(View.GONE);
+                Log.e("UpdateEmail", "Gagal memperbarui email di Authentication: " + task.getException().getMessage());
+                Toast.makeText(getApplicationContext(), "Gagal memperbarui email di Authentication.", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

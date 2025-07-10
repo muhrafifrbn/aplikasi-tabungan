@@ -20,7 +20,13 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -171,6 +177,7 @@ public class ProfileActivity extends AppCompatActivity {
                     } else {
                         // Jika email berubah, update email di Firebase Authentication
                         updateEmailInAuthentication(currentUser, uid, nama, nik, telepon, email);
+//                        testerUpdateEmail(email);
                         Log.d("statu-email", "Berubah");
                     }
 
@@ -184,43 +191,7 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
-        // Cek Keunikan NIK di Realtime Database
-//        databaseReference.orderByChild("nik").equalTo(nik)
-//                .addListenerForSingleValueEvent(new ValueEventListener() {
-//                    @Override
-//                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                        if (snapshot.exists()) {
-//                            // Jika NIK sudah ada, sembunyikan ProgressBar dan tampilkan pesan
-//                            progressBar.setVisibility(View.GONE);
-//                            Toast.makeText(getApplicationContext(), "NIK sudah terdaftar.", Toast.LENGTH_LONG).show();
-//                        } else {
-//                            // NIK unik, lanjutkan pendaftaran (ProgressBar tetap terlihat)
-////                            createFirebaseUser(email, password, nama, nik, telepon);
-////                            progressBar.setVisibility(View.GONE);
-////                            Toast.makeText(getApplicationContext(), "NIK Belum terdaftar.", Toast.LENGTH_LONG).show();
-////                            updateUserToFirebase(nama, nik, email, telepon);
-//                            // NIK unik, lanjutkan update data pengguna
-//                            String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-//                            FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-//
-//                            // Memeriksa apakah email baru sama dengan email yang ada
-//                            if (currentUser != null && email.equals(currentUser.getEmail())) {
-//                                // Jika email tidak berubah, hanya update data lainnya di Realtime Database
-//                                updateUserDataInDatabase(uid, nama, nik, telepon, email);
-//                            } else {
-//                                // Jika email berubah, update email di Firebase Authentication
-//                                updateEmailInAuthentication(currentUser, uid, nama, nik, telepon, email);
-//                            }
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onCancelled(@NonNull DatabaseError error) {
-//                        // Jika gagal, sembunyikan ProgressBar dan tampilkan pesan error
-//                        progressBar.setVisibility(View.GONE);
-//                        Toast.makeText(getApplicationContext(), "Error: " + error.getMessage(), Toast.LENGTH_LONG).show();
-//                    }
-//                });
+
     }
 
     private void logoutUser() {
@@ -342,29 +313,125 @@ public class ProfileActivity extends AppCompatActivity {
 
     // Fungsi untuk memperbarui email di Firebase Authentication dan mengirimkan email verifikasi
     private void updateEmailInAuthentication(FirebaseUser currentUser, String uid, String nama, String nik, String telepon, String email) {
-        // Perbarui email terlebih dahulu
-        currentUser.updateEmail(email).addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                // Jika email berhasil diperbarui, kirimkan email verifikasi
-                currentUser.sendEmailVerification().addOnCompleteListener(verificationTask -> {
-                    if (verificationTask.isSuccessful()) {
-                        // Setelah berhasil memperbarui email dan mengirimkan email verifikasi, update data di Realtime Database
-                        updateUserDataInDatabase(uid, nama, nik, telepon, email);
+        // Membuat kredensial untuk autentikasi ulang
+        AuthCredential credential = EmailAuthProvider.getCredential(currentUser.getEmail(), "1234567");
+        FirebaseUser userLogin = FirebaseAuth.getInstance().getCurrentUser();
 
-                        progressBar.setVisibility(View.GONE);
-                        Toast.makeText(getApplicationContext(), "Email berhasil diperbarui. Cek email Anda untuk verifikasi.", Toast.LENGTH_SHORT).show();
+        // Lakukan autentikasi ulang pengguna dengan kredensial
+        currentUser.reauthenticate(credential).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                // Jika autentikasi ulang berhasil, perbarui email
+                userLogin.updateEmail(email).addOnCompleteListener(updateTask -> {
+                    if (updateTask.isSuccessful()) {
+                        // Kirimkan email verifikasi setelah memperbarui email
+                        currentUser.sendEmailVerification().addOnCompleteListener(verificationTask -> {
+                            if (verificationTask.isSuccessful()) {
+                                // Setelah berhasil memperbarui email dan mengirimkan email verifikasi, update data di Realtime Database
+                                updateUserDataInDatabase(uid, nama, nik, telepon, email);
+
+                                progressBar.setVisibility(View.GONE);
+                                Toast.makeText(getApplicationContext(), "Email berhasil diperbarui. Cek email Anda untuk verifikasi.", Toast.LENGTH_SHORT).show();
+                            } else {
+                                progressBar.setVisibility(View.GONE);
+                                Log.e("UpdateEmail", "Gagal mengirim email verifikasi: " + verificationTask.getException().getMessage());
+                                Toast.makeText(getApplicationContext(), "Gagal mengirim email verifikasi.", Toast.LENGTH_SHORT).show();
+                            }
+                        });
                     } else {
                         progressBar.setVisibility(View.GONE);
-                        Log.e("UpdateEmail", "Gagal mengirim email verifikasi: " + verificationTask.getException().getMessage());
-                        Toast.makeText(getApplicationContext(), "Gagal mengirim email verifikasi.", Toast.LENGTH_SHORT).show();
+                        Log.e("UpdateEmail", "Gagal memperbarui email di Authentication: " + updateTask.getException().getMessage());
+                        Log.e("UpdateEmail", "Error detail: ", updateTask.getException());
+                        Log.e("UpdateEmail", currentUser.getEmail());
+                        Toast.makeText(getApplicationContext(), "Gagal memperbarui email di Authentication.", Toast.LENGTH_SHORT).show();
                     }
                 });
             } else {
-                // Jika gagal memperbarui email, tampilkan pesan error
                 progressBar.setVisibility(View.GONE);
-                Log.e("UpdateEmail", "Gagal memperbarui email di Authentication: " + task.getException().getMessage());
-                Toast.makeText(getApplicationContext(), "Gagal memperbarui email di Authentication.", Toast.LENGTH_SHORT).show();
+                Log.e("UpdateEmail", "Gagal melakukan autentikasi ulang: " + task.getException().getMessage());
+                Toast.makeText(getApplicationContext(), "Autentikasi ulang gagal. Periksa kata sandi Anda.", Toast.LENGTH_SHORT).show();
             }
         });
     }
+
+    private void testerUpdateEmail(String newEmail) {
+        FirebaseUser userLogin = FirebaseAuth.getInstance().getCurrentUser();
+
+        if (userLogin == null) {
+            Toast.makeText(getApplicationContext(), "User belum login.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (!userLogin.isEmailVerified()) {
+            Toast.makeText(getApplicationContext(), "Email Anda belum diverifikasi. Silakan verifikasi dulu sebelum mengganti email.", Toast.LENGTH_LONG).show();
+            userLogin.sendEmailVerification(); // opsional: kirim ulang verifikasi
+            return;
+        }
+
+        // Membuat kredensial untuk autentikasi ulang
+        AuthCredential credential = EmailAuthProvider.getCredential(userLogin.getEmail(), "1234567");  // Masukkan password yang sesuai
+
+        // Lakukan autentikasi ulang pengguna dengan kredensial
+        userLogin.reauthenticate(credential).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                // Jika autentikasi ulang berhasil, perbarui email ke email baru
+                userLogin.updateEmail("lilincemerlang3@gmail.com").addOnCompleteListener(updateTask -> {
+                    if (updateTask.isSuccessful()) {
+                        // Kirim email verifikasi ke email baru
+                        userLogin.sendEmailVerification().addOnCompleteListener(verifyTask -> {
+                            if (verifyTask.isSuccessful()) {
+                                Log.e("UpdateEmail", "Email berhasil diperbarui dan verifikasi dikirim.");
+                                Toast.makeText(getApplicationContext(), "Email berhasil diperbarui. Cek email Anda untuk verifikasi.", Toast.LENGTH_LONG).show();
+                            } else {
+                                Log.e("UpdateEmail", "Gagal mengirim email verifikasi: " + verifyTask.getException().getMessage());
+                                Toast.makeText(getApplicationContext(), "Gagal mengirim email verifikasi ke alamat baru.", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    } else {
+                        Log.e("UpdateEmail", "Gagal memperbarui email di Authentication: " + updateTask.getException().getMessage());
+                        Log.e("UpdateEmail", "Error detail: ", updateTask.getException());
+                        Toast.makeText(getApplicationContext(), "Gagal memperbarui email di Authentication.", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            } else {
+                Log.e("UpdateEmail", "Gagal melakukan autentikasi ulang: " + task.getException().getMessage());
+                Toast.makeText(getApplicationContext(), "Autentikasi ulang gagal. Periksa kata sandi Anda.", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+
+//    private void createFirebaseUser(String email) {
+//        mAuth.createUserWithEmailAndPassword(email, password)
+//                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<AuthResult> task) {
+//                        if (task.isSuccessful()) {
+//                            FirebaseUser user = mAuth.getCurrentUser();
+//                            if (user != null) {
+//                                // KIRIM EMAIL VERIFIKASI
+//                                user.sendEmailVerification()
+//                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+//                                            @Override
+//                                            public void onComplete(@NonNull Task<Void> task) {
+//                                                if (task.isSuccessful()) {
+//                                                    Toast.makeText(RegisterActivity.this,
+//                                                            "Pendaftaran berhasil. Silakan cek email Anda untuk verifikasi.",
+//                                                            Toast.LENGTH_LONG).show();
+//                                                } else {
+//                                                    Toast.makeText(RegisterActivity.this,
+//                                                            "Gagal mengirim email verifikasi.",
+//                                                            Toast.LENGTH_SHORT).show();
+//                                                }
+//                                            }
+//                                        })
+//                            }
+//                        } else {
+//                            // Jika gagal, sembunyikan ProgressBar dan tampilkan pesan error
+//                            progressBar.setVisibility(View.GONE);
+//                            Log.w("gagalEmail", "createUserWithEmail:failure", task.getException());
+//
+//                        }
+//                    }
+//                });
+//    }
 }

@@ -17,6 +17,9 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.NumberFormat;
+import java.util.Locale;
+
 public class UangMasukActivity extends AppCompatActivity {
 
     private EditText etJumlah;
@@ -35,9 +38,9 @@ public class UangMasukActivity extends AppCompatActivity {
         // Inisialisasi UI
         etJumlah = findViewById(R.id.editTextText);
         btnTambah = findViewById(R.id.btnTambah);
-        btnBack = findViewById(R.id.btnBack); // Tambahkan tombol kembali
+        btnBack = findViewById(R.id.btnBack);
 
-        btnBack.setOnClickListener(v -> finish()); // Aksi tombol kembali
+        btnBack.setOnClickListener(v -> finish());
 
         // Firebase
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -46,13 +49,13 @@ public class UangMasukActivity extends AppCompatActivity {
             finish();
             return;
         }
-
+        // Pastikan jalur ke database adalah per user, bukan langsung ke root
         dbRef = FirebaseDatabase.getInstance().getReference("users").child(currentUser.getUid());
 
-        // Ambil tabunganId dari intent
-        tabunganId = getIntent().getStringExtra("TABUNGAN_ID");
-        if (tabunganId == null || tabunganId.isEmpty()) {
-            Toast.makeText(this, "Tabungan tidak ditemukan", Toast.LENGTH_SHORT).show();
+        // Ambil tabunganId dari Intent
+        tabunganId = getIntent().getStringExtra("tabunganId");
+        if (tabunganId == null) {
+            Toast.makeText(this, "ID Tabungan tidak ditemukan", Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
@@ -61,19 +64,15 @@ public class UangMasukActivity extends AppCompatActivity {
     }
 
     private void transferKeTabungan() {
-        String input = etJumlah.getText().toString().trim();
-
-        if (input.isEmpty()) {
-            Toast.makeText(this, "Masukkan jumlah terlebih dahulu", Toast.LENGTH_SHORT).show();
+        String jumlahStr = etJumlah.getText().toString().trim();
+        if (jumlahStr.isEmpty()) {
+            Toast.makeText(this, "Jumlah tidak boleh kosong", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        long jumlahMasuk;
-        try {
-            jumlahMasuk = Long.parseLong(input);
-            if (jumlahMasuk <= 0) throw new NumberFormatException();
-        } catch (NumberFormatException e) {
-            Toast.makeText(this, "Jumlah tidak valid", Toast.LENGTH_SHORT).show();
+        long jumlahMasuk = Long.parseLong(jumlahStr);
+        if (jumlahMasuk <= 0) {
+            Toast.makeText(this, "Jumlah harus lebih dari 0", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -83,8 +82,10 @@ public class UangMasukActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 Long saldoDompet = snapshot.getValue(Long.class);
-                if (saldoDompet == null || saldoDompet < jumlahMasuk) {
-                    Toast.makeText(UangMasukActivity.this, "Saldo dompet tidak mencukupi", Toast.LENGTH_SHORT).show();
+                if (saldoDompet == null) saldoDompet = 0L;
+
+                if (saldoDompet < jumlahMasuk) {
+                    Toast.makeText(UangMasukActivity.this, "Saldo dompet tidak cukup", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -104,6 +105,12 @@ public class UangMasukActivity extends AppCompatActivity {
                         dompetRef.setValue(sisaDompet);
                         tabunganRef.setValue(totalBaru);
 
+                        // Simpan riwayat transaksi
+                        DatabaseReference riwayatRef = dbRef.child("tabungan").child(tabunganId).child("riwayat").push();
+                        String keteranganRiwayat = "Menabung sejumlah " + formatNumber(jumlahMasuk);
+                        Riwayat riwayat = new Riwayat("Menabung", keteranganRiwayat, jumlahMasuk, System.currentTimeMillis());
+                        riwayatRef.setValue(riwayat);
+
                         Toast.makeText(UangMasukActivity.this, "Berhasil menabung", Toast.LENGTH_SHORT).show();
                         finish();
                     }
@@ -120,5 +127,11 @@ public class UangMasukActivity extends AppCompatActivity {
                 Toast.makeText(UangMasukActivity.this, "Gagal mengambil data dompet", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private String formatNumber(long number) {
+        NumberFormat format = NumberFormat.getCurrencyInstance(new Locale("id", "ID"));
+        format.setMaximumFractionDigits(0);
+        return format.format(number);
     }
 }

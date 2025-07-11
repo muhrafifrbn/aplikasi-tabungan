@@ -17,11 +17,14 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.NumberFormat;
+import java.util.Locale;
+
 public class UangKeluarActivity extends AppCompatActivity {
 
     private EditText etJumlah;
     private Button btnTambah;
-    private ImageButton btnBack; // Tambahan tombol kembali
+    private ImageButton btnBack;
 
     private FirebaseUser currentUser;
     private DatabaseReference dbRef;
@@ -41,49 +44,47 @@ public class UangKeluarActivity extends AppCompatActivity {
         }
         dbRef = FirebaseDatabase.getInstance().getReference("users").child(currentUser.getUid());
 
-        // Ambil tabungan ID dari intent
-        tabunganId = getIntent().getStringExtra("TABUNGAN_ID");
-        if (tabunganId == null || tabunganId.isEmpty()) {
-            Toast.makeText(this, "Tabungan tidak ditemukan", Toast.LENGTH_SHORT).show();
-            finish();
-            return;
-        }
-
         // Inisialisasi UI
         etJumlah = findViewById(R.id.editTextText);
         btnTambah = findViewById(R.id.btnTambah);
-        btnBack = findViewById(R.id.btnBack); // Inisialisasi tombol kembali
+        btnBack = findViewById(R.id.btnBack);
 
-        btnBack.setOnClickListener(v -> finish()); // Aksi kembali
+        btnBack.setOnClickListener(v -> finish());
+
+        // Ambil tabunganId dari Intent
+        tabunganId = getIntent().getStringExtra("tabunganId");
+        if (tabunganId == null) {
+            Toast.makeText(this, "ID Tabungan tidak ditemukan", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
 
         btnTambah.setOnClickListener(v -> ambilTabungan());
     }
 
     private void ambilTabungan() {
-        String input = etJumlah.getText().toString().trim();
-
-        if (input.isEmpty()) {
-            Toast.makeText(this, "Masukkan jumlah terlebih dahulu", Toast.LENGTH_SHORT).show();
+        String jumlahStr = etJumlah.getText().toString().trim();
+        if (jumlahStr.isEmpty()) {
+            Toast.makeText(this, "Jumlah tidak boleh kosong", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        long jumlahAmbil;
-        try {
-            jumlahAmbil = Long.parseLong(input);
-            if (jumlahAmbil <= 0) throw new NumberFormatException();
-        } catch (NumberFormatException e) {
-            Toast.makeText(this, "Jumlah tidak valid", Toast.LENGTH_SHORT).show();
+        long jumlahAmbil = Long.parseLong(jumlahStr);
+        if (jumlahAmbil <= 0) {
+            Toast.makeText(this, "Jumlah harus lebih dari 0", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        DatabaseReference tabunganTerkumpulRef = dbRef.child("tabungan").child(tabunganId).child("terkumpul");
+        DatabaseReference tabunganRef = dbRef.child("tabungan").child(tabunganId).child("terkumpul");
 
-        tabunganTerkumpulRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        tabunganRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 Long jumlahTerkumpul = snapshot.getValue(Long.class);
-                if (jumlahTerkumpul == null || jumlahTerkumpul < jumlahAmbil) {
-                    Toast.makeText(UangKeluarActivity.this, "Saldo tabungan tidak mencukupi", Toast.LENGTH_SHORT).show();
+                if (jumlahTerkumpul == null) jumlahTerkumpul = 0L;
+
+                if (jumlahTerkumpul < jumlahAmbil) {
+                    Toast.makeText(UangKeluarActivity.this, "Jumlah tabungan tidak cukup", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -102,6 +103,12 @@ public class UangKeluarActivity extends AppCompatActivity {
                         dbRef.child("tabungan").child(tabunganId).child("terkumpul").setValue(sisaTabungan);
                         dbRef.child("dompetUtama").setValue(saldoBaru);
 
+                        // Simpan riwayat transaksi
+                        DatabaseReference riwayatRef = dbRef.child("tabungan").child(tabunganId).child("riwayat").push();
+                        String keteranganRiwayat = "Mengambil sejumlah " + formatNumber(jumlahAmbil);
+                        Riwayat riwayat = new Riwayat("Ambil Tabungan", keteranganRiwayat, jumlahAmbil, System.currentTimeMillis());
+                        riwayatRef.setValue(riwayat);
+
                         Toast.makeText(UangKeluarActivity.this, "Berhasil mengambil tabungan", Toast.LENGTH_SHORT).show();
                         finish();
                     }
@@ -118,5 +125,11 @@ public class UangKeluarActivity extends AppCompatActivity {
                 Toast.makeText(UangKeluarActivity.this, "Gagal mengambil data tabungan", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private String formatNumber(long number) {
+        NumberFormat format = NumberFormat.getCurrencyInstance(new Locale("id", "ID"));
+        format.setMaximumFractionDigits(0);
+        return format.format(number);
     }
 }

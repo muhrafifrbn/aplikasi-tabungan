@@ -32,6 +32,7 @@ public class TambahTabunganActivity extends AppCompatActivity {
 
         // Inisialisasi Firebase
         mAuth = FirebaseAuth.getInstance();
+        // Perbaiki dbReference untuk menunjuk ke root database, kemudian Anda bisa menunjuk ke child "users"
         dbReference = FirebaseDatabase.getInstance().getReference();
         currentUser = mAuth.getCurrentUser();
 
@@ -90,6 +91,9 @@ public class TambahTabunganActivity extends AppCompatActivity {
         Tabungan tabunganBaru = new Tabungan(namaTarget, targetTabungan, 0);
 
         if (tabunganId != null) {
+            // PENTING: Set ID tabungan ke objek Tabungan sebelum menyimpannya
+            tabunganBaru.setId(tabunganId);
+
             // Simpan objek ke database di bawah ID yang baru dibuat
             userTabunganRef.child(tabunganId).setValue(tabunganBaru)
                     .addOnSuccessListener(aVoid -> {

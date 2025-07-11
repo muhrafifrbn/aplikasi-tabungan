@@ -1,9 +1,11 @@
 package com.example.tabunganku;
 
+import android.app.AlertDialog; // Pastikan menggunakan AlertDialog dari android.app
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText; // Import EditText
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,15 +25,17 @@ import com.google.firebase.database.ValueEventListener;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap; // Import HashMap
 import java.util.List;
 import java.util.Locale;
+import java.util.Map; // Import Map
 
 public class DetailTabunganActivity extends AppCompatActivity {
 
     private TextView tvNamaTabungan, tvTarget, tvTerkumpul;
     private RecyclerView rvRiwayat;
     private AppCompatButton btnAmbil, btnMenabung;
-    private ImageButton btnBack;
+    private ImageButton btnBack, btnEditNamaTabungan; // Tambahkan ImageButton untuk edit
 
     private DetailTabunganAdapter riwayatAdapter;
     private FirebaseAuth mAuth;
@@ -52,6 +56,7 @@ public class DetailTabunganActivity extends AppCompatActivity {
         btnAmbil = findViewById(R.id.btnAmbil);
         btnMenabung = findViewById(R.id.btnMenabung);
         btnBack = findViewById(R.id.btnBack);
+        btnEditNamaTabungan = findViewById(R.id.btnEditNamaTabungan); // Inisialisasi tombol edit
 
         // Inisialisasi Firebase
         mAuth = FirebaseAuth.getInstance();
@@ -65,7 +70,6 @@ public class DetailTabunganActivity extends AppCompatActivity {
 
         // Ambil tabunganId dari Intent
         tabunganId = getIntent().getStringExtra("tabunganId");
-//        Log.d("id", tabunganId);
         if (tabunganId == null) {
             Toast.makeText(this, "ID Tabungan tidak ditemukan", Toast.LENGTH_SHORT).show();
             finish();
@@ -93,6 +97,9 @@ public class DetailTabunganActivity extends AppCompatActivity {
             intent.putExtra("tabunganId", tabunganId);
             startActivity(intent);
         });
+
+        // Listener untuk tombol edit nama tabungan
+        btnEditNamaTabungan.setOnClickListener(v -> showEditNamaTabunganDialog());
     }
 
     @Override
@@ -164,6 +171,54 @@ public class DetailTabunganActivity extends AppCompatActivity {
                 Toast.makeText(DetailTabunganActivity.this, "Gagal memuat riwayat: " + error.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    // Metode baru untuk menampilkan dialog edit nama tabungan
+    private void showEditNamaTabunganDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Edit Nama Tabungan");
+
+        // Set up the input
+        final EditText input = new EditText(this);
+        input.setText(tvNamaTabungan.getText().toString()); // Set teks awal dengan nama tabungan saat ini
+        builder.setView(input);
+
+        // Set up the buttons
+        builder.setPositiveButton("Simpan", (dialog, which) -> {
+            String newName = input.getText().toString().trim();
+            if (newName.isEmpty()) {
+                Toast.makeText(DetailTabunganActivity.this, "Nama tabungan tidak boleh kosong", Toast.LENGTH_SHORT).show();
+            } else {
+                updateNamaTabungan(newName);
+            }
+        });
+        builder.setNegativeButton("Batal", (dialog, which) -> dialog.cancel());
+
+        builder.show();
+    }
+
+    // Metode baru untuk mengupdate nama tabungan di Firebase
+    private void updateNamaTabungan(String newName) {
+        if (currentUser == null || tabunganId == null) {
+            Toast.makeText(this, "Kesalahan: User atau ID tabungan tidak valid.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        DatabaseReference tabunganRef = dbReference.child("tabungan").child(tabunganId);
+
+        // Buat Map untuk update hanya field 'nama'
+        Map<String, Object> updates = new HashMap<>();
+        updates.put("nama", newName);
+
+        tabunganRef.updateChildren(updates)
+                .addOnSuccessListener(aVoid -> {
+                    Toast.makeText(DetailTabunganActivity.this, "Nama tabungan berhasil diubah!", Toast.LENGTH_SHORT).show();
+                    // UI akan otomatis terupdate karena loadTabunganDetail menggunakan addValueEventListener
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(DetailTabunganActivity.this, "Gagal mengubah nama tabungan: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Log.e("DetailTabunganActivity", "Error updating tabungan name", e);
+                });
     }
 
     private String formatNumber(long number) {

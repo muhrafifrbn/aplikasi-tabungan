@@ -1,4 +1,5 @@
 package com.example.tabunganku;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -6,15 +7,18 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
+
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.*;
+
 import java.text.NumberFormat;
 import java.util.Locale;
 
@@ -29,7 +33,8 @@ public class DaftarTabunganActivity extends AppCompatActivity {
     private ViewPager2 viewPager;
     private TabLayout tabLayout;
     private ViewPagerAdapter viewPagerAdapter;
-    private Button btnTransfer,btnTopUp;
+    private Button btnTransfer, btnTopUp, btnRiwayat; // Tambahkan btnRiwayat
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,6 +51,7 @@ public class DaftarTabunganActivity extends AppCompatActivity {
         tabLayout = findViewById(R.id.tabLayout);
         btnTransfer = findViewById(R.id.btnTransfer);
         btnTopUp = findViewById(R.id.btnTopUp);
+
         if (currentUser == null) {
             goToLogin();
             return;
@@ -65,28 +71,27 @@ public class DaftarTabunganActivity extends AppCompatActivity {
             }
         }).attach();
 
+
         btnLogout.setOnClickListener(v -> {
             Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
             startActivity(intent);
         });
 
+
+
         fabAdd.setOnClickListener(v -> {
             startActivity(new Intent(DaftarTabunganActivity.this, TambahTabunganActivity.class));
         });
 
-        btnTransfer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(DaftarTabunganActivity.this, Transfer.class));
-            }
+        btnTransfer.setOnClickListener(v -> {
+            startActivity(new Intent(DaftarTabunganActivity.this, Transfer.class));
         });
 
-        btnTopUp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(DaftarTabunganActivity.this, TopUp.class));
-            }
+        btnTopUp.setOnClickListener(v -> {
+            startActivity(new Intent(DaftarTabunganActivity.this, TopUp.class));
         });
+
+
     }
 
     @Override
@@ -104,6 +109,7 @@ public class DaftarTabunganActivity extends AppCompatActivity {
                         tvDompetUtama.setText("Dompet Utama\t\t0");
                     }
                 }
+
                 @Override
                 public void onCancelled(@NonNull DatabaseError error) {
                     Toast.makeText(DaftarTabunganActivity.this, "Gagal memuat saldo.", Toast.LENGTH_SHORT).show();

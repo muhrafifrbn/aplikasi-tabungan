@@ -19,6 +19,9 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -110,11 +113,16 @@ public class LoginActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // Jika kredensial benar, cek status verifikasi email
                             FirebaseUser user = mAuth.getCurrentUser();
+                            String email = user.getEmail();
+                            String kodeUnik = user.getUid();
+                            Log.d("kode unik", kodeUnik);
+                            Log.d("email", email);
 
                             if (user != null && user.isEmailVerified()) {
                                 // Jika email SUDAH diverifikasi, lanjutkan ke halaman utama
                                 Log.d(TAG, "signInWithEmail:success (Email Verified)");
                                 Toast.makeText(LoginActivity.this, "Login Berhasil.", Toast.LENGTH_SHORT).show();
+//                                getDataCurrentUser();
                                 redirectToMainPage();
                             } else {
                                 // Jika email BELUM diverifikasi, tampilkan pesan dan logout
@@ -138,5 +146,31 @@ public class LoginActivity extends AppCompatActivity {
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
         finish(); // Tutup LoginActivity
+    }
+
+    private void getDataCurrentUser(){
+        // Mendapatkan referensi ke Realtime Database
+        DatabaseReference database = FirebaseDatabase.getInstance().getReference();
+
+        // Mengambil data pengguna berdasarkan UID
+        String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        database.child("users").child(uid).get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                // Jika berhasil, ambil data pengguna
+                DataSnapshot dataSnapshot = task.getResult();
+                String email = dataSnapshot.child("email").getValue(String.class);
+                String namaLengkap = dataSnapshot.child("namaLengkap").getValue(String.class);
+                String nik = dataSnapshot.child("nik").getValue(String.class);
+                String nomorTelepon = dataSnapshot.child("nomorTelepon").getValue(String.class);
+
+                // Menampilkan data pengguna
+                Log.d("User Info", "Email: " + email);
+                Log.d("User Info", "Nama Lengkap: " + namaLengkap);
+                Log.d("User Info", "NIK: " + nik);
+                Log.d("User Info", "Nomor Telepon: " + nomorTelepon);
+            } else {
+                Log.d("User Info", "Failed to retrieve user data.");
+            }
+        });
     }
 }

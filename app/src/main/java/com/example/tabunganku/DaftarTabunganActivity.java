@@ -71,8 +71,13 @@ public class DaftarTabunganActivity extends AppCompatActivity {
             }
         }).attach();
 
-        // Aksi tombol-tombol
-        btnLogout.setOnClickListener(v -> logoutUser());
+
+        btnLogout.setOnClickListener(v -> {
+            Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
+            startActivity(intent);
+        });
+
+
 
         fabAdd.setOnClickListener(v -> {
             startActivity(new Intent(DaftarTabunganActivity.this, TambahTabunganActivity.class));

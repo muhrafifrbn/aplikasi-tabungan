@@ -88,6 +88,8 @@ public class ProfileActivity extends AppCompatActivity {
         btnBack = findViewById(R.id.btnBack);
         btnLogOut = findViewById(R.id.btnLogout);
         progressBar = findViewById(R.id.progressBar); // Hubungkan ProgressBar
+
+        inputEmail.setVisibility(View.GONE);
     }
 
 //    Fungsi untuk mengambil data user yang saat ini sedang login

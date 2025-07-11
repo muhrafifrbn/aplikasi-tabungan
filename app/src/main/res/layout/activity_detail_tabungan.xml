@@ -18,19 +18,18 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:id="@+id/tvDetailNamaTabungan"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="27sp"
-                android:textStyle="bold"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                tools:text="Nama Tabungan" />
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"> <TextView
+            android:id="@+id/tvDetailNamaTabungan"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="27sp"
+            android:textStyle="bold"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="Nama Tabungan" />
 
             <ImageButton
                 android:id="@+id/btnEditNamaTabungan"
@@ -43,6 +42,16 @@
                 app:layout_constraintStart_toEndOf="@id/tvDetailNamaTabungan"
                 app:layout_constraintTop_toTopOf="@id/tvDetailNamaTabungan"
                 app:layout_constraintBottom_toBottomOf="@id/tvDetailNamaTabungan" />
+
+            <ImageButton
+                android:id="@+id/btnDeleteTabungan"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/baseline_auto_delete_24" android:contentDescription="Hapus Tabungan"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </LinearLayout>

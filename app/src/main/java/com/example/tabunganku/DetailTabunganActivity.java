@@ -1,11 +1,11 @@
 package com.example.tabunganku;
 
-import android.app.AlertDialog; // Pastikan menggunakan AlertDialog dari android.app
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.EditText; // Import EditText
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,23 +25,24 @@ import com.google.firebase.database.ValueEventListener;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap; // Import HashMap
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map; // Import Map
+import java.util.Map;
 
 public class DetailTabunganActivity extends AppCompatActivity {
 
     private TextView tvNamaTabungan, tvTarget, tvTerkumpul;
     private RecyclerView rvRiwayat;
     private AppCompatButton btnAmbil, btnMenabung;
-    private ImageButton btnBack, btnEditNamaTabungan; // Tambahkan ImageButton untuk edit
+    private ImageButton btnBack, btnEditNamaTabungan, btnDeleteTabungan; // Tambahkan btnDeleteTabungan
 
     private DetailTabunganAdapter riwayatAdapter;
     private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
     private DatabaseReference dbReference;
     private String tabunganId;
+    private long currentTerkumpulAmount = 0; // Variabel untuk menyimpan jumlah terkumpul saat ini
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +57,8 @@ public class DetailTabunganActivity extends AppCompatActivity {
         btnAmbil = findViewById(R.id.btnAmbil);
         btnMenabung = findViewById(R.id.btnMenabung);
         btnBack = findViewById(R.id.btnBack);
-        btnEditNamaTabungan = findViewById(R.id.btnEditNamaTabungan); // Inisialisasi tombol edit
+        btnEditNamaTabungan = findViewById(R.id.btnEditNamaTabungan);
+        btnDeleteTabungan = findViewById(R.id.btnDeleteTabungan); // Inisialisasi tombol hapus
 
         // Inisialisasi Firebase
         mAuth = FirebaseAuth.getInstance();
@@ -100,12 +102,14 @@ public class DetailTabunganActivity extends AppCompatActivity {
 
         // Listener untuk tombol edit nama tabungan
         btnEditNamaTabungan.setOnClickListener(v -> showEditNamaTabunganDialog());
+
+        // Listener untuk tombol hapus tabungan
+        btnDeleteTabungan.setOnClickListener(v -> showDeleteConfirmationDialog());
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        // Muat ulang data saat kembali ke activity ini
         loadTabunganDetail();
         loadRiwayatTabungan();
     }
@@ -120,8 +124,9 @@ public class DetailTabunganActivity extends AppCompatActivity {
                     tvNamaTabungan.setText(tabungan.getNama());
                     tvTarget.setText(formatNumber(tabungan.getTarget()));
                     tvTerkumpul.setText(formatNumber(tabungan.getTerkumpul()));
+                    // Simpan jumlah terkumpul saat ini
+                    currentTerkumpulAmount = tabungan.getTerkumpul();
                 } else {
-                    // Jika tabungan tidak ditemukan (mungkin sudah dihapus)
                     Toast.makeText(DetailTabunganActivity.this, "Tabungan tidak ditemukan", Toast.LENGTH_SHORT).show();
                     finish();
                 }
@@ -154,13 +159,8 @@ public class DetailTabunganActivity extends AppCompatActivity {
 
                 if (listRiwayat.isEmpty()) {
                     rvRiwayat.setVisibility(View.GONE);
-                    // Jika Anda punya TextView "Riwayat kosong", tampilkan di sini
-                    // Contoh: findViewById(R.id.tvEmptyRiwayatMessage).setVisibility(View.VISIBLE);
                 } else {
                     rvRiwayat.setVisibility(View.VISIBLE);
-                    // Contoh: findViewById(R.id.tvEmptyRiwayatMessage).setVisibility(View.GONE);
-
-                    // Mengurutkan berdasarkan timestamp, dari yang paling BARU ke yang paling LAMA
                     Collections.sort(listRiwayat, (r1, r2) -> Long.compare(r2.getTimestamp(), r1.getTimestamp()));
                     riwayatAdapter.setData(listRiwayat);
                 }
@@ -173,17 +173,14 @@ public class DetailTabunganActivity extends AppCompatActivity {
         });
     }
 
-    // Metode baru untuk menampilkan dialog edit nama tabungan
     private void showEditNamaTabunganDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Edit Nama Tabungan");
 
-        // Set up the input
         final EditText input = new EditText(this);
-        input.setText(tvNamaTabungan.getText().toString()); // Set teks awal dengan nama tabungan saat ini
+        input.setText(tvNamaTabungan.getText().toString());
         builder.setView(input);
 
-        // Set up the buttons
         builder.setPositiveButton("Simpan", (dialog, which) -> {
             String newName = input.getText().toString().trim();
             if (newName.isEmpty()) {
@@ -197,7 +194,6 @@ public class DetailTabunganActivity extends AppCompatActivity {
         builder.show();
     }
 
-    // Metode baru untuk mengupdate nama tabungan di Firebase
     private void updateNamaTabungan(String newName) {
         if (currentUser == null || tabunganId == null) {
             Toast.makeText(this, "Kesalahan: User atau ID tabungan tidak valid.", Toast.LENGTH_SHORT).show();
@@ -205,19 +201,56 @@ public class DetailTabunganActivity extends AppCompatActivity {
         }
 
         DatabaseReference tabunganRef = dbReference.child("tabungan").child(tabunganId);
-
-        // Buat Map untuk update hanya field 'nama'
         Map<String, Object> updates = new HashMap<>();
         updates.put("nama", newName);
 
         tabunganRef.updateChildren(updates)
                 .addOnSuccessListener(aVoid -> {
                     Toast.makeText(DetailTabunganActivity.this, "Nama tabungan berhasil diubah!", Toast.LENGTH_SHORT).show();
-                    // UI akan otomatis terupdate karena loadTabunganDetail menggunakan addValueEventListener
                 })
                 .addOnFailureListener(e -> {
                     Toast.makeText(DetailTabunganActivity.this, "Gagal mengubah nama tabungan: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                     Log.e("DetailTabunganActivity", "Error updating tabungan name", e);
+                });
+    }
+
+    // --- Metode untuk Hapus Tabungan dengan Kondisi Saldo ---
+
+    private void showDeleteConfirmationDialog() {
+        // Cek kondisi saldo terkumpul
+        if (currentTerkumpulAmount > 0) {
+            // Jika ada saldo, tampilkan notifikasi bahwa tidak bisa dihapus
+            new AlertDialog.Builder(this)
+                    .setTitle("Tidak Dapat Menghapus Tabungan")
+                    .setMessage("Tabungan ini memiliki saldo yang terkumpul. Harap kosongkan saldo (Rp 0) sebelum menghapusnya.")
+                    .setPositiveButton("Oke", (dialog, which) -> dialog.dismiss())
+                    .show();
+        } else {
+            // Jika saldo 0, lanjutkan dengan dialog konfirmasi hapus
+            new AlertDialog.Builder(this)
+                    .setTitle("Hapus Tabungan?")
+                    .setMessage("Apakah Anda yakin ingin menghapus tabungan ini? Riwayat tabungan juga akan terhapus secara permanen.")
+                    .setPositiveButton("Hapus", (dialog, which) -> deleteTabungan())
+                    .setNegativeButton("Batal", (dialog, which) -> dialog.cancel())
+                    .show();
+        }
+    }
+
+    private void deleteTabungan() {
+        if (currentUser == null || tabunganId == null) {
+            Toast.makeText(this, "Kesalahan: User atau ID tabungan tidak valid.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        DatabaseReference tabunganRef = dbReference.child("tabungan").child(tabunganId);
+        tabunganRef.removeValue()
+                .addOnSuccessListener(aVoid -> {
+                    Toast.makeText(DetailTabunganActivity.this, "Tabungan berhasil dihapus.", Toast.LENGTH_SHORT).show();
+                    finish(); // Kembali ke halaman sebelumnya setelah tabungan dihapus
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(DetailTabunganActivity.this, "Gagal menghapus tabungan: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Log.e("DetailTabunganActivity", "Error deleting tabungan", e);
                 });
     }
 

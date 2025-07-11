@@ -54,7 +54,7 @@ public class TabunganAdapter extends RecyclerView.Adapter<TabunganAdapter.Tabung
 
                 // Buat Intent
                 Intent intent = new Intent(context, DetailTabunganActivity.class);
-                intent.putExtra("TABUNGAN_ID", tabunganId);
+                intent.putExtra("tabunganId", tabunganId);
                 context.startActivity(intent);
             }
         });
